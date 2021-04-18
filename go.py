@@ -7,7 +7,7 @@ import time
 import cv2
 
 
-def check_person():
+def check_person(camera_stream):
     # Classes which can be detected by a model
     CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
                "bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
@@ -16,8 +16,10 @@ def check_person():
     # Loading model
     net = cv2.dnn.readNetFromCaffe('MobileNetSSD_deploy.prototxt.txt', 'MobileNetSSD_deploy.caffemodel')
     # Getting frame by a camera
-    vs = VideoStream(src=0).start()
-    frame = vs.read()
+    frame = camera_stream.read()
+    if frame is None:
+        print('Camera connection failed')
+        return '0'
     # Frame's processing
     frame = imutils.resize(frame, width=400)
     (h, w) = frame.shape[:2]
@@ -33,26 +35,22 @@ def check_person():
             if CLASSES[idx] != 'person':
                 continue
             else:
-                vs.stop()
                 return '1'
         else:
             idx = int(detections[0, 0, i, 1])
             if CLASSES[idx] == 'person':
-                vs.stop()
                 return '0'
-
-    vs.stop()
     return '0'
 
 
 # def start_mesuring(pusk):
 ArduinoSerial = serial.Serial('com3', 9600)  # создаем объект для работы с портом последовательной связи
-time.sleep(2)  # ждем 2 секунды чтобы установилась последовательная связь
+# time.sleep(2)  # ждем 2 секунды чтобы установилась последовательная связь
 # print (ArduinoSerial.readline()) #считываем данные из последовательного порта и печатаем их в виде строки
 # print("Enter 1 to turn ON LED and 0 to turn OFF LED")
-
+camera_stream = VideoStream(src=0).start()
 while True:
-    is_person_detected = check_person()
+    is_person_detected = check_person(camera_stream)
     if is_person_detected == '1':
         print('Human detected')
     else:
