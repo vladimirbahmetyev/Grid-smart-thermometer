@@ -72,7 +72,7 @@ if (data == '1') {
     float celcius = tempData - 273.15;
  
     Serial.print("Celcius: ");
-    Serial.println(celcius + 4);
+    Serial.println(celcius);
     delay(1000); 
     //если температура человека в норме, загорается зеленая лампочка
     if (celcius <= 32.5){
@@ -88,7 +88,7 @@ if (data == '1') {
       digitalWrite(11, LOW);
       delay(1000); // ждем 1 секунду
     }
-    Serial.println("Hello, there");
+    Serial.println("1");
     data = 0;
 }
 else { 
