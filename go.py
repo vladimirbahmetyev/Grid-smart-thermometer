@@ -4,7 +4,7 @@ from imutils.video import VideoStream
 import numpy as np
 import imutils
 import time
-import cv2 as cv2
+import cv2
 
 
 def check_person(camera_stream):
@@ -14,7 +14,7 @@ def check_person(camera_stream):
                "dog", "horse", "motorbike", "person", "pottedplant", "sheep",
                "sofa", "train", "tvmonitor"]
     # Loading model
-    net = cv2.cv2.dnn.readNetFromCaffe('MobileNetSSD_deploy.prototxt.txt', 'MobileNetSSD_deploy.caffemodel')
+    net = cv2.dnn.readNetFromCaffe('MobileNetSSD_deploy.prototxt.txt', 'MobileNetSSD_deploy.caffemodel')
     # Getting frame by a camera
     frame = camera_stream.read()
     if frame is None:
@@ -23,7 +23,7 @@ def check_person(camera_stream):
     # Frame's processing
     frame = imutils.resize(frame, width=400)
     (h, w) = frame.shape[:2]
-    blob = cv2.cv2.dnn.blobFromImage(cv2.cv2.resize(frame, (300, 300)),
+    blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)),
                                  0.007843, (300, 300), 127.5)
     net.setInput(blob)
     detections = net.forward()
