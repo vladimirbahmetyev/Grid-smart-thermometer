@@ -56,9 +56,18 @@ while True:
         ArduinoSerial.write(is_person_detected.encode())  # pass 1
         check = str(ArduinoSerial.readline()) 
         a = str(b'1\r\n')
+        b = str(b'2\r\n')
+        c = str(b'3\r\n')
+        d = str(b'4\r\n')
         while (check != a):
             check = str(ArduinoSerial.readline())
             print (check)
+            if (check == b):
+                print ('Move your hand to the sensor')
+            if (check == c):
+                print ('Temperature is normal, come through')
+            if (check == d):
+                print ('No passage, high temperature')
     else:
         print('Human not detected')
         ArduinoSerial.write(is_person_detected.encode())  # pass 0
