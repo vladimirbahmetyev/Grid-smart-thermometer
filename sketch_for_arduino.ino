@@ -43,6 +43,7 @@ if (data == '1') {
       Serial.print(distance);
       Serial.println("см");
     }
+    Serial.println("2");
     //когда человек подошел достаточно близко запускаем измерение температуры через 5 секунд
     delay(5000);
     int dev = 0x5A<<1;
@@ -76,6 +77,7 @@ if (data == '1') {
     delay(1000); 
     //если температура человека в норме, загорается зеленая лампочка
     if (celcius <= 32.5){
+      Serial.println("3");
       digitalWrite(13, HIGH);
       delay(10000); // ждем 10 секунд
       digitalWrite(13, LOW);
@@ -83,6 +85,7 @@ if (data == '1') {
     }
     //если нет - красная
     else {
+      Serial.println("4");
       digitalWrite(11, HIGH);
       delay(10000); // ждем 10 секунд
       digitalWrite(11, LOW);
