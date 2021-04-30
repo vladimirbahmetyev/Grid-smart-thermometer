@@ -13,8 +13,11 @@ COLORS = {'y': ['#FFFF99','#FFFF00'],
           'b': ['#9999FF','#0000FF']}
 
 def thermometer(ArduinoSerial):
+    for widget in root.winfo_children():
+        widget.destroy()
+    new_person = True
     lbl_th = tk.Label(text='Come Closer')
-    lbl_th.place(x=400,y=250,anchor="center")
+    lbl_th.place(x=root.winfo_screenwidth()//2,y=root.winfo_screenheight()//2,anchor="center")
     lbl_th.config(font=("Helvetica", 34, "bold"),fg=COLORS['b'][1],bg=COLORS['b'][0])
     # lbl.config(fg=COLORS['b'][1],bg=COLORS['b'][0])
     root.configure(background=COLORS['b'][0])
@@ -45,9 +48,10 @@ def thermometer(ArduinoSerial):
             lbl_th.config(font=("Helvetica", 34, "bold"),fg=COLORS['r'][1],bg=COLORS['r'][0])
             root.configure(background=COLORS['r'][0])
         
-        lbl_th.place(x=400,y=250,anchor="center")
+        lbl_th.place(x=root.winfo_screenwidth()//2,y=root.winfo_screenheight()//2,anchor="center")
         
         root.update()
+        # lbl_th.destroy()
 
 def detection():
     for widget in root.winfo_children():
@@ -55,47 +59,49 @@ def detection():
     ArduinoSerial = serial.Serial('com3', 9600)  # create an object to work with a serial communication port
     time.sleep(2)  # wait 2 seconds for serial communication to be established
     camera_stream = VideoStream(src=0).start()
+
     while True:
         # lbl = tk.Label(text='')
         # lbl.destroy()
+        for widget in root.winfo_children():
+            widget.destroy() 
         is_person_detected = check_person(camera_stream)
         if is_person_detected == '1':
             ArduinoSerial.write(is_person_detected.encode())  # pass 1
             lbl = tk.Label(text='Human Detected')
             lbl.config(font=("Helvetica", 34, "bold"),fg=COLORS['g'][1],bg=COLORS['g'][0])
             root.configure(background=COLORS['g'][0])
-            lbl.place(x=400,y=250,anchor="center")
+            lbl.place(x=root.winfo_screenwidth()//2,y=root.winfo_screenheight()//2,anchor="center")
             root.update()
-            time.sleep(3)
-            lbl.destroy()
+            time.sleep(1)
+            # lbl.destroy()
             thermometer(ArduinoSerial)
             
         else:
             lbl = tk.Label(text='Human Not Detected')
             lbl.config(font=("Helvetica", 34, "bold"),fg=COLORS['r'][1],bg=COLORS['r'][0])
             root.configure(background=COLORS['r'][0])
-            lbl.place(x=400,y=250,anchor="center")
+            lbl.place(x=root.winfo_screenwidth()//2,y=root.winfo_screenheight()//2,anchor="center")
             root.update()
             ArduinoSerial.write(is_person_detected.encode())  # pass 0
-            time.sleep(3)
-            lbl.destroy()
+            time.sleep(1)
+            # lbl.destroy()
          
         root.update()
 
-def start_pressed():
-    detection()
 
 def start():
     global root
     root = tk.Tk()
-    root.geometry('800x500')
+    root.overrideredirect(False)
+    root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
     root.title('Smart Thermometer') 
 
-    btn_strt = tk.Button(root, text='Start', command=lambda: start_pressed())
+    btn_strt = tk.Button(root, text='Start', command=lambda: detection())
     btn_strt.config(font=("Helvetica", 34, "bold"))
     btn_strt.config(fg=COLORS['b'][1], bg=COLORS['b'][0])
     root.config(background=COLORS['b'][0])
-    btn_strt.place(x=400,y=250,anchor="center")
+    btn_strt.place(x=root.winfo_screenwidth()//2,y=root.winfo_screenheight()//2,anchor="center")
     root.mainloop()
 
 if __name__=='__main__':
