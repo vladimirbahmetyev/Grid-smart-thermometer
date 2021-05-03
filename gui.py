@@ -1,8 +1,4 @@
 import tkinter as tk
-# from tkinter.messagebox import showinfo
-# from ttk import Combobox
-# from PIL import ImageTk, Image
-# from tkinter import filedialog
 from go import *
 
 global COLORS, is_end
@@ -13,7 +9,9 @@ COLORS = {'y': ['#FFFF99','#FFFF00'],
           'r': ['#FF9999','#FF0000'],
           'b': ['#9999FF','#0000FF']}
 
+
 def thermometer(ArduinoSerial):
+    ''' Thermometer instruction and results page '''
     for widget in root.winfo_children():
         widget.destroy()
 
@@ -26,10 +24,10 @@ def thermometer(ArduinoSerial):
                 activebackground=COLORS['b'][0],
                 command=lambda: end())
     btn_end.pack(side=tk.TOP, anchor=tk.NE)
+
     lbl_th = tk.Label(text='Come Closer')
     lbl_th.place(x=root.winfo_screenwidth()//2,y=root.winfo_screenheight()//2,anchor="center")
     lbl_th.config(font=("Helvetica", 54, "bold"),fg=COLORS['b'][1],bg=COLORS['b'][0])
-    # lbl.config(fg=COLORS['b'][1],bg=COLORS['b'][0])
     root.configure(background=COLORS['b'][0])
     root.update()
  
@@ -40,7 +38,7 @@ def thermometer(ArduinoSerial):
     d = str(b'4\r\n')
     while (check != a and not is_end):
         check = str(ArduinoSerial.readline())
-        print(check)
+        # print(check)
 
         if (check == b):
             lbl_th.destroy()
@@ -61,21 +59,15 @@ def thermometer(ArduinoSerial):
             lbl_th = tk.Label(text='No passage,\n high temperature')
             lbl_th.config(font=("Helvetica", 54, "bold"),fg=COLORS['r'][1],bg=COLORS['r'][0])
             root.configure(background=COLORS['r'][0])
-            btn_end.configure(bg=COLORS['g'][0])
+            btn_end.configure(bg=COLORS['r'][0])
         
         lbl_th.place(x=root.winfo_screenwidth()//2,y=root.winfo_screenheight()//2,anchor="center")
-        
         root.update()
-        # lbl_th.destroy()
 
 
 def detection():
-    # for widget in root.winfo_children():
-    #     widget.destroy()
-
+    ''' Human detection page '''
     while not is_end:
-        # lbl = tk.Label(text='')
-        # lbl.destroy()
         for widget in root.winfo_children():
             widget.destroy() 
 
@@ -88,7 +80,6 @@ def detection():
                     activebackground=root['background'],
                     command=lambda: end())
         btn_end.pack(side=tk.TOP, anchor=tk.NE)
-        # btn_end.config(fg=COLORS['b'][1], bg=COLORS['b'][0])
 
         is_person_detected = check_person(camera_stream)
         if is_person_detected == '1':
@@ -99,8 +90,8 @@ def detection():
             lbl.place(x=root.winfo_screenwidth()//2,y=root.winfo_screenheight()//2,anchor="center")
             btn_end.configure(bg=COLORS['g'][0])
             root.update()
+            
             time.sleep(2)
-            # lbl.destroy()
             thermometer(ArduinoSerial)
             
         else:
@@ -110,23 +101,23 @@ def detection():
             lbl.place(x=root.winfo_screenwidth()//2,y=root.winfo_screenheight()//2,anchor="center")
             btn_end.configure(bg=COLORS['r'][0])
             root.update()
-            ArduinoSerial.write(is_person_detected.encode())  # pass 0
+            ArduinoSerial.write(is_person_detected.encode())  
             time.sleep(2)
-            # lbl.destroy()
-         
-        root.update()
 
+        root.update()
+   
+    # check the button end presses
     if is_end:
-        # camera_stream.stream.release()
-        # cv2.destroyAllWindows()
         start()
+
 
 def end():
     global is_end
     is_end = True
-    # start()
+
 
 def start():
+    ''' Start Page '''
     global is_end
     is_end = False
     for widget in root.winfo_children():
@@ -139,14 +130,18 @@ def start():
                         font=("Helvetica", 54, "bold"),
                         fg=COLORS['b'][1], 
                         bg=COLORS['b'][0],
-                        activeforeground=COLORS['b'][1], 
+                        activeforeground="#000099",
                         activebackground=COLORS['b'][0],
-                        highlightcolor="grey",
                         padx=25,pady=25,
                         command=lambda: detection())
-    # btn_strt.config(font=("Helvetica", 54, "bold"))
-    # btn_strt.config(fg=COLORS['b'][1], bg=COLORS['b'][0])
+
+    lbl_info = tk.Label(text="Smart Thermometer Made By Bahmetyev Vladimir, Bartashuk Anastasiia, Ruschenko Vlada",
+                        fg="#3333FF",
+                        bg=COLORS['b'][0],
+                        font=("Helvetica", 12),
+                        pady=15)
     
+    lbl_info.pack(side="bottom")
     btn_strt.place(x=root.winfo_screenwidth()//2,y=root.winfo_screenheight()//2,anchor="center")
     
 
@@ -157,6 +152,7 @@ if __name__=='__main__':
     root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
     root.title('Smart Thermometer')
 
+    # PREPARE ARDUINO AND CAMERA    
     ArduinoSerial = serial.Serial('com3', 9600)  # create an object to work with a serial communication port
     time.sleep(2)  # wait 2 seconds for serial communication to be established
     camera_stream = VideoStream(src=0).start()
