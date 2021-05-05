@@ -19,6 +19,7 @@
 
 ### Program requirements:
 * Python 3.8
+* Arduino IDE
 ## How to run it
 1. Install requirements.txt  ```pip install -r requirements.txt```
 2. Install 'i2cmaster.h' and 'NewPing.h' for programming Arduino Uno
