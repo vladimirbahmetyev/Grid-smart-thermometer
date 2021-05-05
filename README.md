@@ -2,8 +2,8 @@
 ## Grid & Cloud, SPBU
 
 ## How it works
-1. The program expects some video stream, after which the script analyzes the frame and determines whether a person is on the frame or not.
-2. If a person has been detected, the program sends a signal to the Arduino uno platform to go into human standby mode
+1. The program expects some video stream, after which the script analyzes the frame and determines whether a person is on the frame or not
+2. If a person has been detected, the program sends a signal to the Arduino Uno platform to go into human standby mode
 3. As soon as the person is close enough, the Arduino switches to temperature measurement mode
 4. After measuring the temperature, the result is displayed on the screen
 5. Then the detection will start again
