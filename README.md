@@ -27,3 +27,5 @@
 4. Start script 'gui.py'
 5. Press button 'Start'
 6. Observe the result
+
+Video link: https://youtu.be/jkmvaj2FUCw
